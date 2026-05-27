@@ -3,8 +3,10 @@ package banking.step1;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+
 public class BankingSystemMain {
-    public static void main(String[] args) {
+	//github 연동
+	public static void main(String[] args) {
         AccountManager manager = new AccountManager();
         Scanner mainScanner = new Scanner(System.in);
         

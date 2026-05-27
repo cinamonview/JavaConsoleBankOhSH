@@ -7,7 +7,7 @@ import banking.step1.AccountManager;
 import banking.step1.ICustomDefine;
 
 public class BankingSystemMain {
-
+	//github연동
 		public static void main(String[] args) {
 			
 			AccountManager manager = new AccountManager();
