@@ -19,7 +19,8 @@ public class HighCreditAccount extends Account {
         } else if (creditLevel.equalsIgnoreCase("C")) {
             this.creditRate = ICustomDefine.C_GRADE_RATE;
         } else {
-            this.creditRate = 0;
+        	this.creditRate = ICustomDefine.C_GRADE_RATE; // 오타 시 기본 C등급 처리
+            this.creditLevel = "C";
         }
     }
 

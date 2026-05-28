@@ -42,14 +42,27 @@ public class AccountManager {
         } else if (choice == 2) {
             System.out.print("기본이율(%) : ");
             int interRate = BankingSystemMain.scanner.nextInt();
-            System.out.print("신용등급(A/B/C) : ");
-            String creditLevel = BankingSystemMain.scanner.next();
             
-            // 고신용계좌 생성 및 저장 (생성자 내부에서 신용이율 계산 자동화)
+            String creditLevel = "";
+            
+            while (true) {
+                System.out.print("신용등급(A/B/C) : ");
+                creditLevel = BankingSystemMain.scanner.next().toUpperCase(); // 무조건 대문자로 변환
+                
+                // A, B, C 중 하나라면 올바르게 입력한 것이므로 while문 탈출
+                if (creditLevel.equals("A") || creditLevel.equals("B") || creditLevel.equals("C")) {
+                    break; 
+                }
+                // 잘못 입력했다면 경고 메시지를 띄우고 다시 대기
+                System.out.println("[오류] 신용등급은 A, B, C 중 하나만 입력해야 합니다. 다시 입력해 주세요.");
+            }
+            
+            // 올바른 등급이 검증되었으므로 인스턴스 생성
             accountArray[accountCount++] = new HighCreditAccount(accNum, name, balance, interRate, creditLevel);
             System.out.println("고신용계좌 개설이 완료되었습니다.\n");
-        }
-    }
+        } // <- else if (choice == 2) 블록이 여기서 깔끔하게 끝납니다.
+    } // <- makeAccount() 메서드가 여기서 끝납니다. (중복 코드가 완전히 제거됨)
+    
 
     // 입 금 (수정 없음 - 다형성에 의해 오버라이딩된 자식의 deposit()이 자동 호출됨)
     public void depositMoney() {
