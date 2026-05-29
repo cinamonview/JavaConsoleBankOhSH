@@ -20,6 +20,7 @@ public class BankingSystemMain {
     }
     
     //학원에서 pull없이 작업함
+    //github clone 작업 성공
 	public static void main(String[] args) {
 		
 		//main에서 메니져 인스턴스 생성시 배열의 크기 50을 전달 
