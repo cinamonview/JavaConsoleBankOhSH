@@ -1,17 +1,18 @@
 package banking5;
 
+import java.io.*;
 import java.util.HashSet;
 import java.util.InputMismatchException;
 import java.util.Iterator;
 
 public class AccountManager {
     
-    // [4단계 변경] 인스턴스 배열 대신 HashSet 컬렉션 사용
     private HashSet<Account> accountSet;
          
     public AccountManager() {
-        // 크기 제한이 없으므로 생성자에서 배열 크기를 받지 않고 초기화합니다.
         accountSet = new HashSet<Account>();
+        // 프로그램 시작 직후 복원할 수 있도록 생성자에서 파일을 로드합니다.
+        loadAccount();
     }
     
     public void makeAccount() {
@@ -52,8 +53,6 @@ public class AccountManager {
         }
 
         if (newAccount != null) {
-            // [4단계 핵심] HashSet에 추가를 시도합니다. 
-            // 중복된 해시코드와 equals 결과를 가지면 add()는 false를 반환합니다.
             boolean isAdded = accountSet.add(newAccount);
             
             if (!isAdded) {
@@ -62,7 +61,6 @@ public class AccountManager {
                 String answer = BankingSystemMain.scanner.next();
                 
                 if (answer.equalsIgnoreCase("y")) {
-                    // 기존 중복 객체를 제거하고 새 객체를 넣음으로써 덮어쓰기를 수행합니다.
                     accountSet.remove(newAccount);
                     accountSet.add(newAccount);
                     System.out.println("기존 정보 위에 덮어쓰기 처리가 완료되었습니다.\n");
@@ -100,7 +98,6 @@ public class AccountManager {
             return;
         }
 
-        // 컬렉션 전체를 순회하며 계좌 찾기
         for (Account acc : accountSet) {
             if (acc.getAccountNumber().equals(accNum)) {
                 acc.deposit(money);
@@ -160,18 +157,16 @@ public class AccountManager {
         System.out.println("해당 계좌가 존재하지 않습니다.\n");
     }
 
-    // [4단계 추가] 계좌 정보 삭제 기능
     public void deleteAccount() {
         System.out.println("***계좌정보삭제***");
         System.out.print("삭제할 계좌번호를 입력하세요: ");
         String accNum = BankingSystemMain.scanner.next();
 
-        // 안전한 컬렉션 요소 삭제를 위해 Iterator(반복자) 사용
         Iterator<Account> itr = accountSet.iterator();
         while (itr.hasNext()) {
             Account acc = itr.next();
             if (acc.getAccountNumber().equals(accNum)) {
-                itr.remove(); // 일치하는 계좌 컬렉션에서 삭제
+                itr.remove(); 
                 System.out.println("계좌정보 삭제가 완료되었습니다.\n");
                 return;
             }
@@ -185,5 +180,48 @@ public class AccountManager {
             acc.showAccountInfo();
         }
         System.out.println("전체계좌정보 출력이 완료되었습니다.\n");
+    }
+
+    // [5단계 핵심] 가이드라인 A 반영: 프로그램을 종료하는 시점에 파일로 저장
+    public void saveAccount() {
+        ObjectOutputStream out = null;
+        try {
+            out = new ObjectOutputStream(new FileOutputStream("AccountInfo.obj"));
+            // HashSet 컬렉션 객체를 통째로 직렬화하여 파일에 기록합니다.
+            out.writeObject(accountSet);
+            System.out.println("AccountInfo.obj 파일로 저장되었습니다.");
+        } catch (IOException e) {
+            System.out.println("[오류] 파일 저장 중 문제가 발생했습니다: " + e.getMessage());
+        } finally {
+            try {
+                if (out != null) out.close();
+            } catch (IOException e) {}
+        }
+    }
+
+    // [5단계 핵심] 가이드라인 B 반영: 프로그램 시작 직후 복원
+    @SuppressWarnings("unchecked")
+    public void loadAccount() {
+        File file = new File("AccountInfo.obj");
+        
+        // 데이터 파일이 아직 생성되지 않았다면 복원을 건너뜁니다.
+        if (!file.exists()) {
+            System.out.println("AccountInfo.obj 파일없음");
+            return;
+        }
+
+        ObjectInputStream in = null;
+        try {
+            in = new ObjectInputStream(new FileInputStream(file));
+            // 역직렬화하여 저장되어 있던 HashSet 데이터를 복원하고 강제 형변환합니다.
+            accountSet = (HashSet<Account>) in.readObject();
+            System.out.println("AccountInfo.obj 복원완료");
+        } catch (Exception e) {
+            System.out.println("[오류] 파일 복원 중 문제가 발생했습니다: " + e.getMessage());
+        } finally {
+            try {
+                if (in != null) in.close();
+            } catch (IOException e) {}
+        }
     }
 }
