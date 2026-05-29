@@ -1,14 +1,13 @@
-package banking3;
+package banking4;
 
 public class NormalAccount extends Account {
-    private int interRate; // 이율정보(이자비율 %)
+    private int interRate; 
 
     public NormalAccount(String accountNumber, String accountName, int accountBalance, int interRate) {
         super(accountNumber, accountName, accountBalance);
         this.interRate = interRate;
     }
 
-    // [수정] 이자 계산 방식: 잔고 + (잔고 * 기본이자) + 입금액
     @Override
     public void deposit(int money) {
         int interest = (int)(this.accountBalance * (interRate / 100.0));
@@ -21,4 +20,4 @@ public class NormalAccount extends Account {
         System.out.println(" 기 본 이 율 : " + interRate + "%");
         System.out.println(" ############ ");
     }
-} // 기존 코드에서 누락되었던 닫는 괄호 수정 완료
+}

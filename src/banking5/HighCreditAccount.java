@@ -1,9 +1,9 @@
-package banking3;
+package banking5;
 
 public class HighCreditAccount extends Account {
-    private int interRate;      // 기본 이율 (%)
-    private String creditLevel; // 신용등급 (A, B, C)
-    private int creditRate;     // 신용 추가 이율 (%)
+    private int interRate;      
+    private String creditLevel; 
+    private int creditRate;     
 
     public HighCreditAccount(String accountNumber, String accountName, int accountBalance, int interRate, String creditLevel) {
         super(accountNumber, accountName, accountBalance);
@@ -22,7 +22,6 @@ public class HighCreditAccount extends Account {
         }
     }
 
-    // [수정] 이자 계산 방식: 잔고 + (잔고 * 기본이자) + (잔고 * 추가이자) + 입금액
     @Override
     public void deposit(int money) {
         int basicInterest = (int)(this.accountBalance * (interRate / 100.0));
